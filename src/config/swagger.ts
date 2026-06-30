@@ -41,6 +41,32 @@ const options: swaggerJsdoc.Options = {
             email: { type: 'string', format: 'email', description: 'Correo electrónico' },
           },
         },
+        Project: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            name: { type: 'string' },
+            description: { type: 'string', nullable: true },
+            ownerId: { type: 'string', format: 'uuid' },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+        CreateProjectInput: {
+          type: 'object',
+          required: ['name', 'ownerId'],
+          properties: {
+            name: { type: 'string', description: 'Nombre del proyecto' },
+            description: { type: 'string', description: 'Descripción del proyecto' },
+            ownerId: { type: 'string', format: 'uuid', description: 'ID del usuario propietario' },
+          },
+        },
+        UpdateProjectInput: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', description: 'Nombre del proyecto' },
+            description: { type: 'string', description: 'Descripción del proyecto' },
+          },
+        },
         Error: {
           type: 'object',
           properties: {

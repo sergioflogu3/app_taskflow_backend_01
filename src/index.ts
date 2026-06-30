@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import healthRouter from './routes/health';
 import usersRoute from './routes/users';
+import projectsRoute from './routes/projects';
 import { swaggerSpec } from './config/swagger';
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // ── Rutas ────────────────────────────────────────
 app.use('/health', healthRouter);
 app.use('/api/users', usersRoute);
+app.use('/api/projects', projectsRoute); 
 
 // Ruta raíz informativa
 app.get('/', (req: Request, res: Response) => {
