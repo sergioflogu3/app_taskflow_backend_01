@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { tasksService } from '../services/tasks.service';
 import { CreateTaskDto, UpdateTaskDto } from '../types/task.types';
+import { success, error } from '../utils/api-response';
 
 export const tasksController = {
 
@@ -42,14 +43,13 @@ export const tasksController = {
    *                 count:
    *                   type: integer
    */
-  // GET /api/projects/:projectId/tasks?status=TODO
   async getByProject(req: Request, res: Response): Promise<void> {
     try {
       const projectId = req.params.projectId as string;
       const status = req.query.status as string | undefined;
       const tasks = await tasksService.findByProject(projectId, status);
-      res.json({ data: tasks, count: tasks.length });
-    } catch (e: any) { res.status(e?.status ?? 500).json({ error: e?.message }); }
+      success(res, { data: tasks, count: tasks.length });
+    } catch (e: any) { error(res, e?.message ?? 'Error al obtener tareas', e?.status ?? 500); }
   },
 
   /**
@@ -85,13 +85,12 @@ export const tasksController = {
    *             schema:
    *               $ref: '#/components/schemas/Error'
    */
-  // GET /api/tasks/:id
   async getById(req: Request, res: Response): Promise<void> {
     try {
       const task = await tasksService.findById(req.params.id as string);
-      if (!task) { res.status(404).json({ error: 'Tarea no encontrada' }); return; }
-      res.json({ data: task });
-    } catch (e: any) { res.status(e?.status ?? 500).json({ error: e?.message }); }
+      if (!task) { error(res, 'Tarea no encontrada', 404); return; }
+      success(res, { data: task });
+    } catch (e: any) { error(res, e?.message ?? 'Error al obtener la tarea', e?.status ?? 500); }
   },
 
   /**
@@ -125,15 +124,14 @@ export const tasksController = {
    *             schema:
    *               $ref: '#/components/schemas/Error'
    */
-  // POST /api/tasks  (requiere auth)
   async create(req: Request, res: Response): Promise<void> {
     try {
       const task = await tasksService.create(
         req.body as CreateTaskDto,
         req.user!.userId
       );
-      res.status(201).json({ data: task });
-    } catch (e: any) { res.status(e?.status ?? 500).json({ error: e?.message }); }
+      success(res, { data: task }, 'Operación exitosa', 201);
+    } catch (e: any) { error(res, e?.message ?? 'Error al crear la tarea', e?.status ?? 500); }
   },
 
   /**
@@ -175,7 +173,6 @@ export const tasksController = {
    *             schema:
    *               $ref: '#/components/schemas/Error'
    */
-  // PUT /api/tasks/:id  (requiere auth)
   async update(req: Request, res: Response): Promise<void> {
     try {
       const task = await tasksService.update(
@@ -183,8 +180,8 @@ export const tasksController = {
         req.body as UpdateTaskDto,
         req.user!.userId
       );
-      res.json({ data: task });
-    } catch (e: any) { res.status(e?.status ?? 500).json({ error: e?.message }); }
+      success(res, { data: task });
+    } catch (e: any) { error(res, e?.message ?? 'Error al actualizar la tarea', e?.status ?? 500); }
   },
 
   /**
@@ -213,11 +210,10 @@ export const tasksController = {
    *             schema:
    *               $ref: '#/components/schemas/Error'
    */
-  // DELETE /api/tasks/:id  (requiere auth)
   async remove(req: Request, res: Response): Promise<void> {
     try {
       await tasksService.remove(req.params.id as string, req.user!.userId);
-      res.status(204).send();
-    } catch (e: any) { res.status(e?.status ?? 500).json({ error: e?.message }); }
+      success(res, undefined, 'Operación exitosa', 200);
+    } catch (e: any) { error(res, e?.message ?? 'Error al eliminar la tarea', e?.status ?? 500); }
   },
 };

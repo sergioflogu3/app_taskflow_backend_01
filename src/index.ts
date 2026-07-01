@@ -8,6 +8,8 @@ import projectsRoute from './routes/projects';
 import tasksRoute from './routes/tasks';
 import authRoute from './routes/auth';
 import { swaggerSpec } from './config/swagger';
+import { createAuthMiddleware } from './middleware/auth.middleware';
+import { success, error } from './utils/api-response';
 
 dotenv.config();
 
@@ -22,6 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 // ── Documentación Swagger ────────────────────────
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Auth global para /api (excluye POST /auth/register y POST /auth/login)
+const authMw = createAuthMiddleware();
+app.use('/api', authMw);
+
 // ── Rutas ────────────────────────────────────────
 app.use('/health', healthRouter);
 app.use('/api/users', usersRoute);
@@ -31,16 +37,15 @@ app.use('/api/auth', authRoute);
 
 // Ruta raíz informativa
 app.get('/', (req: Request, res: Response) => {
-  res.json({
-    message: '🚀 TaskFlow API — Clase 1',
+  success(res, {
     version: '1.0.0',
     docs: '/api-docs',
-  });
+  }, 'TaskFlow API');
 });
 
 // ── Middleware de errores no encontrados ─────────
 app.use((req: Request, res: Response) => {
-  res.status(404).json({ error: 'Ruta no encontrada' });
+  error(res, 'Ruta no encontrada', 404);
 });
 
 // ── Iniciar servidor ─────────────────────────────

@@ -11,11 +11,11 @@ export const validate = (schema: ZodSchema) =>
     });
 
     if (!result.success) {
-      const errors = result.error.errors.map(e => ({
+      const issues = result.error.issues.map(e => ({
         field:   e.path.slice(1).join('.'),  // quitar 'body.' del path
         message: e.message,
       }));
-      res.status(400).json({ error: 'Datos de entrada inválidos', details: errors });
+      res.status(400).json({ error: 'Datos de entrada inválidos', details: issues });
       return;
     }
 

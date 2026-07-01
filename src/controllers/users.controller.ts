@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { usersService } from '../services/users.service';
 import { CreateUserDto, UpdateUserDto } from '../types/users.types';
+import { success, error } from '../utils/api-response';
 
 function isPrismaError(error: unknown): error is { code: string } {
   return typeof error === 'object' && error !== null && 'code' in error;
@@ -32,9 +33,9 @@ export const usersController = {
   async getAll(req: Request, res: Response): Promise<void> {
     try {
       const users = await usersService.findAll();
-      res.json({ data: users, count: users.length });
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener usuarios" });
+      success(res, { data: users, count: users.length });
+    } catch (e) {
+      error(res, 'Error al obtener usuarios', 500);
     }
   },
 
@@ -73,12 +74,12 @@ export const usersController = {
     try {
       const user = await usersService.findById(req.params.id as string);
       if (!user) {
-        res.status(404).json({ error: "Usuario no encontrado" });
+        error(res, 'Usuario no encontrado', 404);
         return;
       }
-      res.json({ data: user });
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener el usuario" });
+      success(res, { data: user });
+    } catch (e) {
+      error(res, 'Error al obtener el usuario', 500);
     }
   },
 
@@ -121,18 +122,18 @@ export const usersController = {
     try {
       const { name, email, password } = req.body as CreateUserDto;
       if (!name || !email || !password) {
-        res.status(400).json({ error: "name, email y password son requeridos" });
+        error(res, 'name, email y password son requeridos', 400);
         return;
       }
       const exists = await usersService.existsByEmail(email);
       if (exists) {
-        res.status(409).json({ error: "El email ya está registrado" });
+        error(res, 'El email ya está registrado', 409);
         return;
       }
       const user = await usersService.create({ name, email, password });
-      res.status(201).json({ data: user });
-    } catch (error) {
-      res.status(500).json({ error: "Error al crear el usuario" });
+      success(res, { data: user }, 'Operación exitosa', 201);
+    } catch (e) {
+      error(res, 'Error al crear el usuario', 500);
     }
   },
 
@@ -177,21 +178,20 @@ export const usersController = {
     try {
       const { name, email } = req.body as UpdateUserDto;
       const user = await usersService.update(req.params.id as string, { name, email });
-      res.json({ data: user });
-    } catch (error: unknown) {
-      if (isPrismaError(error) && error.code === 'P2025') {
-        res.status(404).json({ error: "Usuario no encontrado" });
+      success(res, { data: user });
+    } catch (e: unknown) {
+      if (isPrismaError(e) && e.code === 'P2025') {
+        error(res, 'Usuario no encontrado', 404);
         return;
       }
-      res.status(500).json({ error: "Error al actualizar el usuario" });
+      error(res, 'Error al actualizar el usuario', 500);
     }
   },
 
   /**
-
-    * @openapi
-    * /api/users/{id}:
-    *   delete:
+   * @openapi
+   * /api/users/{id}:
+   *   delete:
    *     tags: [Usuarios]
    *     summary: Eliminar un usuario
    *     parameters:
@@ -215,13 +215,13 @@ export const usersController = {
   async remove(req: Request, res: Response): Promise<void> {
     try {
       await usersService.remove(req.params.id as string);
-      res.status(204).send();
-    } catch (error: unknown) {
-      if (isPrismaError(error) && error.code === 'P2025') {
-        res.status(404).json({ error: "Usuario no encontrado" });
+      success(res, undefined, 'Operación exitosa', 200);
+    } catch (e: unknown) {
+      if (isPrismaError(e) && e.code === 'P2025') {
+        error(res, 'Usuario no encontrado', 404);
         return;
       }
-      res.status(500).json({ error: "Error al eliminar el usuario" });
+      error(res, 'Error al eliminar el usuario', 500);
     }
   },
 };
