@@ -15,6 +15,13 @@ const options: swaggerJsdoc.Options = {
       },
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
       schemas: {
         User: {
           type: 'object',
@@ -39,6 +46,30 @@ const options: swaggerJsdoc.Options = {
           properties: {
             name: { type: 'string', description: 'Nombre del usuario' },
             email: { type: 'string', format: 'email', description: 'Correo electrónico' },
+          },
+        },
+        RegisterInput: {
+          type: 'object',
+          required: ['name', 'email', 'password'],
+          properties: {
+            name: { type: 'string', description: 'Nombre del usuario' },
+            email: { type: 'string', format: 'email', description: 'Correo electrónico' },
+            password: { type: 'string', minLength: 6, description: 'Contraseña' },
+          },
+        },
+        LoginInput: {
+          type: 'object',
+          required: ['email', 'password'],
+          properties: {
+            email: { type: 'string', format: 'email', description: 'Correo electrónico' },
+            password: { type: 'string', description: 'Contraseña' },
+          },
+        },
+        AuthResponse: {
+          type: 'object',
+          properties: {
+            token: { type: 'string', description: 'Token JWT' },
+            user: { $ref: '#/components/schemas/User' },
           },
         },
         Project: {
