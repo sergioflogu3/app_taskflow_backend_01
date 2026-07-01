@@ -5,6 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import healthRouter from './routes/health';
 import usersRoute from './routes/users';
 import projectsRoute from './routes/projects';
+import tasksRoute from './routes/tasks';
 import authRoute from './routes/auth';
 import { swaggerSpec } from './config/swagger';
 
@@ -25,6 +26,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/health', healthRouter);
 app.use('/api/users', usersRoute);
 app.use('/api/projects', projectsRoute); 
+app.use('/api/tasks', tasksRoute); 
 app.use('/api/auth', authRoute); 
 
 // Ruta raíz informativa

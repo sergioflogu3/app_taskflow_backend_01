@@ -104,6 +104,38 @@ const options: swaggerJsdoc.Options = {
             error: { type: 'string' },
           },
         },
+        Task: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            title: { type: 'string' },
+            description: { type: 'string', nullable: true },
+            status: { type: 'string', enum: ['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'] },
+            projectId: { type: 'string', format: 'uuid' },
+            assignedTo: { type: 'string', format: 'uuid', nullable: true },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+        CreateTaskInput: {
+          type: 'object',
+          required: ['title', 'projectId'],
+          properties: {
+            title: { type: 'string', description: 'Título de la tarea' },
+            description: { type: 'string', description: 'Descripción de la tarea' },
+            status: { type: 'string', enum: ['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'], description: 'Estado de la tarea' },
+            projectId: { type: 'string', format: 'uuid', description: 'ID del proyecto al que pertenece' },
+            assignedTo: { type: 'string', format: 'uuid', description: 'ID del usuario asignado' },
+          },
+        },
+        UpdateTaskInput: {
+          type: 'object',
+          properties: {
+            title: { type: 'string', description: 'Título de la tarea' },
+            description: { type: 'string', description: 'Descripción de la tarea' },
+            status: { type: 'string', enum: ['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'], description: 'Estado de la tarea' },
+            assignedTo: { type: 'string', format: 'uuid', nullable: true, description: 'ID del usuario asignado' },
+          },
+        },
       },
     },
   },
