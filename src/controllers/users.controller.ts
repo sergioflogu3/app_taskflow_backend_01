@@ -15,6 +15,8 @@ export const usersController = {
    *   get:
    *     tags: [Usuarios]
    *     summary: Listar todos los usuarios
+   *     security:
+   *       - bearerAuth: []
    *     responses:
    *       200:
    *         description: Lista de usuarios
@@ -53,6 +55,8 @@ export const usersController = {
    *           type: string
    *           format: uuid
    *         description: ID del usuario
+   *     security:
+   *       - bearerAuth: []
    *     responses:
    *       200:
    *         description: Usuario encontrado
@@ -89,6 +93,8 @@ export const usersController = {
    *   post:
    *     tags: [Usuarios]
    *     summary: Crear un nuevo usuario
+   *     security:
+   *       - bearerAuth: []
    *     requestBody:
    *       required: true
    *       content:
@@ -151,6 +157,8 @@ export const usersController = {
    *           type: string
    *           format: uuid
    *         description: ID del usuario
+   *     security:
+   *       - bearerAuth: []
    *     requestBody:
    *       required: true
    *       content:
@@ -202,6 +210,8 @@ export const usersController = {
    *           type: string
    *           format: uuid
    *         description: ID del usuario
+   *     security:
+   *       - bearerAuth: []
    *     responses:
    *       204:
    *         description: Usuario eliminado (sin contenido)

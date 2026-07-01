@@ -11,6 +11,8 @@ export const projectsController = {
    *   get:
    *     tags: [Proyectos]
    *     summary: Listar todos los proyectos
+   *     security:
+   *       - bearerAuth: []
    *     responses:
    *       200:
    *         description: Lista de proyectos
@@ -49,6 +51,8 @@ export const projectsController = {
    *           type: string
    *           format: uuid
    *         description: ID del proyecto
+   *     security:
+   *       - bearerAuth: []
    *     responses:
    *       200:
    *         description: Proyecto encontrado
@@ -85,6 +89,8 @@ export const projectsController = {
    *   post:
    *     tags: [Proyectos]
    *     summary: Crear un nuevo proyecto
+   *     security:
+   *       - bearerAuth: []
    *     requestBody:
    *       required: true
    *       content:
@@ -140,6 +146,8 @@ export const projectsController = {
    *           type: string
    *           format: uuid
    *         description: ID del proyecto
+   *     security:
+   *       - bearerAuth: []
    *     requestBody:
    *       required: true
    *       content:
@@ -191,6 +199,8 @@ export const projectsController = {
    *           type: string
    *           format: uuid
    *         description: ID del proyecto
+   *     security:
+   *       - bearerAuth: []
    *     responses:
    *       204:
    *         description: Proyecto eliminado (sin contenido)

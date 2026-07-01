@@ -136,6 +136,24 @@ const options: swaggerJsdoc.Options = {
             assignedTo: { type: 'string', format: 'uuid', nullable: true, description: 'ID del usuario asignado' },
           },
         },
+        Comment: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            content: { type: 'string' },
+            taskId: { type: 'string', format: 'uuid' },
+            userId: { type: 'string', format: 'uuid' },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+        CreateCommentInput: {
+          type: 'object',
+          required: ['content', 'taskId'],
+          properties: {
+            content: { type: 'string', description: 'Contenido del comentario' },
+            taskId: { type: 'string', format: 'uuid', description: 'ID de la tarea' },
+          },
+        },
       },
     },
   },

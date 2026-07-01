@@ -7,6 +7,7 @@ import usersRoute from './routes/users';
 import projectsRoute from './routes/projects';
 import tasksRoute from './routes/tasks';
 import authRoute from './routes/auth';
+import commentsRoute from './routes/comments';
 import { swaggerSpec } from './config/swagger';
 import { createAuthMiddleware } from './middleware/auth.middleware';
 import { success, error } from './utils/api-response';
@@ -33,7 +34,9 @@ app.use('/health', healthRouter);
 app.use('/api/users', usersRoute);
 app.use('/api/projects', projectsRoute); 
 app.use('/api/tasks', tasksRoute); 
-app.use('/api/auth', authRoute); 
+app.use('/api/auth', authRoute);
+app.use('/api/comments', commentsRoute);
+
 
 // Ruta raíz informativa
 app.get('/', (req: Request, res: Response) => {
